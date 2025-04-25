@@ -1,7 +1,7 @@
 import cv2
 
-class Cammera:
-    cammera = None
+class Camera:
+    camera = None
 
 
     def __init__(self, camIndex):
