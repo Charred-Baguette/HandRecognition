@@ -14,9 +14,14 @@ def setup():
     import requests
    
     print("Dependencies installed successfully!")
-    print("Downloading dataset...")
     
-    url = "syntaxes.org/tmp/asl.zip"
+    dataset_path = "dataset"
+    if os.path.exists(dataset_path):
+        print(f"Dataset directory '{dataset_path}' already exists. Skipping download.")
+        return
+
+    print("Downloading dataset...")
+    url = "https://syntaxes.org/tmp/asl.zip"
     response = requests.get(url, stream=True)
     zip_path = "dataset.zip"
     
