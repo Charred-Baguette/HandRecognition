@@ -1,6 +1,6 @@
 #setup script
 def setup():
-    print("Installing dependencies...")
+    print("Importing dependencies...")
     import pandas as pd
     import os
     import torch
@@ -13,28 +13,16 @@ def setup():
     import zipfile
     import requests
    
-    print("Dependencies installed successfully!")
+    print("Dependencies imported successfully!")
     
-    dataset_path = "dataset"
+    dataset_path = "Type_01_(Raw_Gesture)"
     if os.path.exists(dataset_path):
-        print(f"Dataset directory '{dataset_path}' already exists. Skipping download.")
-        return
+        print(f"Dataset directory '{dataset_path}' already exists.")
 
-    print("Downloading dataset...")
-    url = "https://syntaxes.org/tmp/asl.zip"
-    response = requests.get(url, stream=True)
-    zip_path = "dataset.zip"
+    else: 
+        print("Please get dataset...")
+
     
-    with open(zip_path, "wb") as f:
-        f.write(response.content)
-    
-    print("Extracting dataset...")
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall("dataset")
-    
-    # Clean up zip file
-    os.remove(zip_path)
-    print("Dataset setup complete!")
 
 if __name__ == "__main__":
     setup()
