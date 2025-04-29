@@ -31,24 +31,47 @@ def check_dataset_structure():
 
 def train_yolo():
     model_path = 'yolov8n.pt'
-    if not os.path.exists(model_path):
-        print(f"Downloading {model_path}...")
-    
-    # Load a pretrained YOLO model
-    model = YOLO('yolov8n.pt')
-    
-    # Ensure dataset structure exists
-    check_dataset_structure()
-    
-    # Train the model
-    results = model.train(
-        data='dataset/data.yaml',
-        epochs=100,
-        imgsz=640,
-        batch=16,
-        name='hand_recognition',
-        exist_ok=True  # Allow overwriting existing results
-    )
+    last_checkpoint = 'runs/detect/hand_recognition/weights/last.pt'
+    try:
+        if os.path.exists(last_checkpoint):
+            print(f"Found existing checkpoint at {last_checkpoint}")
+            print("Attempting to resume training...")
+            model = YOLO(last_checkpoint)
+            results = model.train(
+                data='dataset/data.yaml',
+                epochs=500,
+                imgsz=640,
+                batch=32,
+                name='hand_recognition',
+                exist_ok=True,
+                optimizer='auto',
+                resume=True
+            )
+        else:
+            print("Starting new training session...")
+            model = YOLO(model_path)
+            results = model.train(
+                data='dataset/data.yaml',
+                epochs=500,
+                imgsz=640,
+                batch=32,
+                optimizer='auto',
+                name='hand_recognition',
+                exist_ok=True,
+                resume=False  # Don't try to resume for new training
+            )
+    except AssertionError as e:
+        print("Previous training was completed. Starting fresh training...")
+        model = YOLO(model_path)
+        results = model.train(
+            data='dataset/data.yaml',
+            epochs=100,
+            imgsz=640,
+            batch=16,
+            name='hand_recognition',
+            exist_ok=True,
+            resume=False
+        )
 
 if __name__ == "__main__":
     print("Training YOLO model...")
