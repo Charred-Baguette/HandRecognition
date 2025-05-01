@@ -30,7 +30,7 @@ def check_dataset_structure():
             print(f"Created missing directory: {full_path}")
 
 def train_yolo():
-    model_path = 'yolov8n.pt'
+    model_path = 'yolo11n.pt'
     last_checkpoint = 'runs/detect/hand_recognition/weights/last.pt'
     try:
         if os.path.exists(last_checkpoint):
