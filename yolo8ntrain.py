@@ -47,6 +47,17 @@ def train_yolo():
                 optimizer='auto',
                 resume=True
             )
+            
+            # Add validation
+            print("\nValidating final model...")
+            val_results = model.val(data='dataset/data.yaml')
+            print(f"\nValidation Results:")
+            print(f"mAP50-95: {val_results.box.map}")
+            print(f"mAP50: {val_results.box.map50}")
+            print(f"mAP75: {val_results.box.map75}")
+            print(f"Precision: {val_results.box.p}")
+            print(f"Recall: {val_results.box.r}")
+
         else:
             print("Starting new training session...")
             model = YOLO(model_path)
@@ -60,6 +71,17 @@ def train_yolo():
                 exist_ok=True,
                 resume=False  # Don't try to resume for new training
             )
+            
+            # Add validation
+            print("\nValidating final model...")
+            val_results = model.val(data='dataset/data.yaml')
+            print(f"\nValidation Results:")
+            print(f"mAP50-95: {val_results.box.map}")
+            print(f"mAP50: {val_results.box.map50}")
+            print(f"mAP75: {val_results.box.map75}")
+            print(f"Precision: {val_results.box.p}")
+            print(f"Recall: {val_results.box.r}")
+
     except AssertionError as e:
         print("Previous training was completed. Starting fresh training...")
         model = YOLO(model_path)
@@ -72,6 +94,16 @@ def train_yolo():
             exist_ok=True,
             resume=False
         )
+        
+        # Add validation
+        print("\nValidating final model...")
+        val_results = model.val(data='dataset/data.yaml')
+        print(f"\nValidation Results:")
+        print(f"mAP50-95: {val_results.box.map}")
+        print(f"mAP50: {val_results.box.map50}")
+        print(f"mAP75: {val_results.box.map75}")
+        print(f"Precision: {val_results.box.p}")
+        print(f"Recall: {val_results.box.r}")
 
 if __name__ == "__main__":
     print("Training YOLO model...")
