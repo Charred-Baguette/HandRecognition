@@ -55,7 +55,7 @@ def findPosition(camFrame, handNo=0, draw=False):
     else:
         return lmsList, bbox, frame
 class YoloDeployed: 
-    def __init__(self, model_path='best.pt'):
+    def __init__(self, model_path='11nlast.pt'):
         self.model = YOLO(model_path)
         self.model.fuse()  
         self.model.eval() 
