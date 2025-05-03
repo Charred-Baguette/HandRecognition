@@ -87,13 +87,37 @@ class YoloDeployed:
     def predict_webcam(self):
         cap = cv2.VideoCapture(0)
         
+        # Add window configuration
+        cv2.namedWindow('Hand Crop', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('Hand Crop', 960, 720)  # 1.5x larger than 640x480
+        
         while cap.isOpened():
             success, frame = cap.read()
+            
             if success:
-                # Make prediction on frame
+                # Find hand position
+                lmsList, bbox, frame2 = findPosition(frame, draw=True)
+                # Handle bbox coordinates
+                if bbox:
+                    cv2.imshow('frame', cv2.rectangle(frame2, (bbox[0] - 20, bbox[1] - 20),(bbox[2] + 20, bbox[3] + 20), (0, 255 , 0) , 2))
+
+                    bbox = list(bbox)
+                    try:
+                        for x in range(3):
+                            if bbox[x] <= 20:
+                                bbox[x] = 21
+                    except:
+                        bbox = [21, 21, 21, 21]
+                    
+                    # Show cropped frame
+                    hand_crop = frame[max(0, bbox[1]-20):min(frame.shape[0], bbox[3]+20),
+                                    max(0, bbox[0]-20):min(frame.shape[1], bbox[2]+20)]
+                    if hand_crop.size != 0:
+                        cv2.imshow('Hand Crop', hand_crop)
+                
+                # Make prediction
                 results = self.predict(frame, conf=0.25, show=True)
                 
-                # Press 'q' to quit
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             else:
